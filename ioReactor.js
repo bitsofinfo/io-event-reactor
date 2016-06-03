@@ -7,8 +7,9 @@ class Evaluator {
         this._reactors = reactors;
     }
 
-    getEvalFunction() {
-        return this._evaluatorFunction;
+    evaluate(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
+        var x = this._evaluatorFunction(ioEventType, fullPath, optionalFsStats, optionalExtraInfo);
+        return x;
     }
 
     getReactors() {
@@ -54,7 +55,7 @@ class IoReactor {
             var monitor = new MonitorPlugin(this._name,
                                             this._logFunction,
                                             this._errorCallback,
-                                            this._monitorEventCallback,
+                                            this._monitorEventCallback.bind(this),
                                             this._monitorInitializedCallback,
                                             config.monitor);
 
@@ -136,7 +137,15 @@ class IoReactor {
     }
 
     _monitorEventCallback(eventType, fullPath, optionalFsStats, optionalExtraInfo) {
-        this._log("trace", "Monitor event: " + eventType + " " + fullPath + " " + util.inspect(optionalFsStats) + " " + util.inspect(optionalExtraInfo));
+        this._log("trace", "Monitor event: " + eventType + " " + fullPath + " "/* + util.inspect(optionalFsStats) + " " + util.inspect(optionalExtraInfo)*/);
+
+        for (let evaluator of this._evaluators) {
+            if (evaluator.evaluate(eventType, fullPath, optionalFsStats, optionalExtraInfo)) {
+                for (let reactor of evaluator.getReactors()) {
+                    reactor.react(eventType, fullPath, optionalFsStats, optionalExtraInfo);
+                }
+            }
+        }
     }
 
     /**

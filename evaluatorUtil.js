@@ -1,3 +1,5 @@
+var util = require('util');
+
 class EvaluatorUtil {
     constructor() {}
 
@@ -20,7 +22,8 @@ class EvaluatorUtil {
 
         return function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
             if (typeEvaluator(ioEventType,fullPath,optionalFsStats,optionalExtraInfo)) {
-                return parsedRegex.exec(fullPath)
+                parsedRegex.lastIndex = 0;
+                return parsedRegex.exec(fullPath);
             } else {
                 return false;
             }

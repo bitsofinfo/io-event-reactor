@@ -4,7 +4,9 @@ var EvaluatorUtil = require('./evaluatorUtil');
 var util = require('util');
 
 var logger = function(severity, origin, message) {
-    console.log(severity + ' ' + origin + ' ' + message);
+    if (severity != 'trace') {
+        console.log(severity + ' ' + origin + ' ' + message);
+    }
 };
 
 var errorCallback = function(message,error) {
@@ -25,24 +27,25 @@ var config = {
                     plugin: "../io-event-reactor-plugin-chokidar",
                     paths: ['/tmp/test1'],
                     options: {
-                        alwaysStat: true,
+                        alwaysStat: false,
                         awaitWriteFinish: {
-                            stabilityThreshold: 1000,
-                            pollInterval: 1000
+                            stabilityThreshold: 200,
+                            pollInterval: 100
                         }
                     }
             },
 
-            evaluators: [
-                {
-                    evaluator: EvaluatorUtil.regex(['change'],'test\d+.txt','ig'),
-                    reactors: ['logger']
-                }
-            ],
-
             reactors: [
                 { plugin: "./default_plugins/logger/loggerReactorPlugin" }
+            ],
+
+            evaluators: [
+                {
+                    evaluator: EvaluatorUtil.regex(['change'],'.*test\\d+.txt.*','ig'),
+                    reactors: ['logger']
+                }
             ]
+
         }
 
    ]

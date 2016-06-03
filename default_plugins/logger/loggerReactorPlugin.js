@@ -39,7 +39,7 @@ class LoggerReactorPlugin {
     }
 
     react(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
-        this._log('info',"REACT["+getName()+"]() invoked: " + ioEventType + " for: " + fullPath);
+        this._log('info',"REACT["+this.getName()+"]() invoked: " + ioEventType + " for: " + fullPath);
     }
 
     /**
