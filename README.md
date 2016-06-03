@@ -1,3 +1,3 @@
-# nodejs-io-event-reactor
+# io-event-reactor
 
-Reacts to filesystem events by invoking plugins that match configurable conditions
+Node.js module for reacting to filesystem events by invoking plugins that match configurable conditions
