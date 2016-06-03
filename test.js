@@ -1,4 +1,6 @@
+
 var IoReactorService = require("./");
+var EvaluatorUtil = require('./evaluatorUtil');
 var util = require('util');
 
 var logger = function(severity, origin, message) {
@@ -6,7 +8,7 @@ var logger = function(severity, origin, message) {
 };
 
 var errorCallback = function(message,error) {
-    console.log("ERROR-CALLBACK! " + message + ' ' + error);
+    //console.log("ERROR-CALLBACK! " + message + ' ' + error);
 };
 
 var config = {
@@ -20,7 +22,7 @@ var config = {
 
             monitor: {
 
-                    plugin: "io-event-reactor-plugin-chokidar",
+                    plugin: "../io-event-reactor-plugin-chokidar",
                     paths: ['/tmp/test1'],
                     options: {
                         alwaysStat: true,
@@ -29,7 +31,18 @@ var config = {
                             pollInterval: 1000
                         }
                     }
-            }
+            },
+
+            evaluators: [
+                {
+                    evaluator: EvaluatorUtil.regex(['change'],'test\d+.txt','ig'),
+                    reactors: ['logger']
+                }
+            ],
+
+            reactors: [
+                { plugin: "./default_plugins/logger/loggerReactorPlugin" }
+            ]
         }
 
    ]

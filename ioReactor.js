@@ -1,6 +1,21 @@
 var util = require('util');
 var IoReactorException = require('./ioReactorException');
 
+class Evaluator {
+    constructor(evaluatorFunction, reactors) {
+        this._evaluatorFunction = evaluatorFunction;
+        this._reactors = reactors;
+    }
+
+    getEvalFunction() {
+        return this._evaluatorFunction;
+    }
+
+    getReactors() {
+        return this._reactors;
+    }
+}
+
 class IoReactor {
 
     /**
@@ -15,6 +30,11 @@ class IoReactor {
     *
     *      monitor - REQUIRED object configuration for an io-even-reactor "MonitorPlugin" - see available list at: https://github.com/bitsofinfo/io-event-reactor
     *
+    *      evaluators - REQUIRED array[] of one or more config objects, each containing the following properties
+    *           - evaluator: function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo), if function returns 'true' all attached reactors will be invoked. If false, nothing will happen. See the 'Evaluators' class for methods that will generate an applicable function for simple use-cases.
+    *           - reactors: array[] of reactor names that should be invoked if the 'evaluator' function returns 'true'
+    *
+    *      reactors - REQUIRED array[] of one of more object configurations io-even-reactor "ReactorPlugin"'s' - see available list at: https://github.com/bitsofinfo/io-event-reactor
     *
     */
     constructor(config) {
@@ -25,12 +45,11 @@ class IoReactor {
         this._logFunction = config.logFunction; // function(severity, origin, message)
         this._errorCallback = config.errorCallback; // function(message, sourceErrorObject)
 
-
         /**
         * #1 Create our MonitorPlugin
         */
         try {
-            var MonitorPlugin = require("../"+config.monitor.plugin);
+            var MonitorPlugin = require(config.monitor.plugin);
 
             var monitor = new MonitorPlugin(this._name,
                                             this._logFunction,
@@ -46,6 +65,65 @@ class IoReactor {
             this._log('error',errMsg);
             throw new IoReactorException(errMsg,e);
         }
+
+        /**
+        * #2 Build our Reactors
+        */
+        this._reactors = {};
+
+        try {
+            for (let reactorConf of config.reactors) {
+
+                var ReactorPlugin = require(reactorConf.plugin);
+
+                var reactor = new ReactorPlugin(this._name,
+                                                this._logFunction,
+                                                this._errorCallback,
+                                                this._monitorInitializedCallback,
+                                                reactorConf);
+
+                this._reactors[reactor.getName()] = reactor;
+
+                this._log("info","Successfully registered Reactor: " + reactor.getName());
+            }
+
+
+        } catch(e) {
+            var errMsg = this.__proto__.constructor.name+ "["+this._name+"] unexpected error creating Reactors: " + util.inspect(e);
+            this._log('error',errMsg);
+            throw new IoReactorException(errMsg,e);
+        }
+
+
+        /**
+        * #3 Build our evaluators and bind to reactors
+        */
+        this._evaluators = [];
+
+        try {
+            for (let evaluator of config.evaluators) {
+
+                var boundReactors = [];
+                for (let reactorName of evaluator.reactors) {
+                    var reactorInstance = this._reactors[reactorName];
+                    if (typeof(reactorInstance) == 'undefined') {
+                        throw "No ReactorPlugin registered w/ name: " + reactorName;
+                    }
+
+                    boundReactors.push(reactorInstance);
+                }
+
+                this._evaluators.push(new Evaluator(evaluator.evaluator, boundReactors));
+            }
+
+            this._log("info","Successfully registered Evaluators: " + this._evaluators.length);
+
+        } catch(e) {
+            var errMsg = this.__proto__.constructor.name+ "["+this._name+"] unexpected error creating Evaluators: " + util.inspect(e);
+            this._log('error',errMsg);
+            throw new IoReactorException(errMsg,e);
+        }
+
 
     }
 
