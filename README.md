@@ -1,2 +1,3 @@
 # nodejs-io-event-reactor
-Module for conditionally reacting to watches and monitors on filesystem events by executing customizable plugins
+
+Reacts to filesystem events by invoking plugins that match configurable conditions
