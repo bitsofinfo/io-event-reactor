@@ -17,6 +17,7 @@ class Evaluator {
     }
 }
 
+
 class IoReactor {
 
     /**
@@ -142,7 +143,14 @@ class IoReactor {
         for (let evaluator of this._evaluators) {
             if (evaluator.evaluate(eventType, fullPath, optionalFsStats, optionalExtraInfo)) {
                 for (let reactor of evaluator.getReactors()) {
-                    reactor.react(eventType, fullPath, optionalFsStats, optionalExtraInfo);
+
+                    reactor.react(eventType, fullPath, optionalFsStats, optionalExtraInfo).then(function(result){
+                        console.log(util.inspect(result));
+
+                    }).catch(function(error) {
+                        var errMsg = "Reactor["+reactor.getName()+"] had error reacting to event["+eventType+"] file["+fullPath+"]";
+                        this._onError(errMsg,error);
+                    });
                 }
             }
         }

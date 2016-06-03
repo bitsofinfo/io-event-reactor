@@ -4,9 +4,9 @@ var EvaluatorUtil = require('./evaluatorUtil');
 var util = require('util');
 
 var logger = function(severity, origin, message) {
-    if (severity != 'trace') {
+    //if (severity != 'trace') {
         console.log(severity + ' ' + origin + ' ' + message);
-    }
+    //}
 };
 
 var errorCallback = function(message,error) {

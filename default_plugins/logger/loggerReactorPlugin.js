@@ -1,4 +1,5 @@
 var util = require('util');
+var ReactorResult = require('../../reactorUtil');
 
 class LoggerReactorPlugin {
 
@@ -34,12 +35,33 @@ class LoggerReactorPlugin {
 
     }
 
+    /**
+    * getName() - core ReactorPlugin function
+    *
+    * @return the short name used to bind this reactor plugin to an Evaluator
+    */
     getName() {
         return 'logger';
     }
 
+    /**
+    * react() - core ReactorPlugin function
+    *
+    * This function is required on ReactorPlugin implementations
+    *
+    * @param ioEventType - one of add, addDir, unlink, unlinkDir, change
+    * @param fullPath
+    * @param optionalFsStats - https://nodejs.org/api/fs.html#fs_class_fs_stats
+    * @param optionalExtraInfo - will vary based on configured ReactorMonitor plugin
+    * @return Promise - when fulfilled/returns a result object, on reject an error
+    *
+    */
     react(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
-        this._log('info',"REACT["+this.getName()+"]() invoked: " + ioEventType + " for: " + fullPath);
+        var self = this;
+        return new Promise(function(resolve, reject) {
+            self._log('info',"REACT["+self.getName()+"]() invoked: " + ioEventType + " for: " + fullPath);
+            resolve(new ReactorResult(true,ioEventType,fullPath,optionalFsStats,optionalExtraInfo,"no message"));
+        });
     }
 
     /**
@@ -47,7 +69,6 @@ class LoggerReactorPlugin {
     *  will set origin = this class' name
     */
     _log(severity,message) {
-        //console.log(severity + ' ' + message);
         this._logFunction(severity,(this.__proto__.constructor.name + '[' + this._reactorName + ']'),message);
     }
 
