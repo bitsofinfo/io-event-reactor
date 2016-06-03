@@ -1,0 +1,44 @@
+{
+    "name":"nodejs-io-event-reactor",
+    "version":"1.0.0-beta.1",
+    "description":"Module for conditionally reacting to watches and monitors on filesystem events by executing customizable plugins such as executing SQL or executing system commands",
+    "main":"ioReactor.js",
+    "directories":{
+        "test":"test"
+    },
+    "scripts":{
+        "test":"mocha test/all.js"
+    },
+    "keywords":[
+        "io",
+        "event",
+        "monitor",
+        "watch",
+        "file",
+        "directory",
+        "filesystem",
+        "directories"
+    ],
+    "dependencies":{
+        "chokidar":"latest",
+        "stateful-process-command-proxy":"latest"
+    },
+    "devDependencies":{
+        "mocha":"latest"
+    },
+    "contributors":[
+        {
+            "name":"bitsofinfo",
+            "url":"http://bitsofinfo.wordpress.com"
+        }
+    ],
+    "license":"ISC",
+    "repository":{
+        "type":"git",
+        "url":"https://github.com/bitsofinfo/nodejs-io-event-reactor.git"
+    },
+    "bugs":{
+        "url":"https://github.com/bitsofinfo/nodejs-io-event-reactor/issues"
+    },
+    "homepage":"https://github.com/bitsofinfo/nodejs-io-event-reactor"
+}
