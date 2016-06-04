@@ -1,5 +1,5 @@
-var IoReactor = require('./ioReactor');
-var IoReactorException = require('./ioReactorException');
+var IoReactor = require('./ioReactor').IoReactor;
+var IoReactorException = require('./ioReactor').IoReactorException;
 var util = require('util');
 
 

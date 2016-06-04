@@ -1,5 +1,77 @@
 var util = require('util');
-var IoReactorException = require('./ioReactorException');
+
+class EvaluatorUtil {
+    constructor() {}
+
+    static ioEventType(qualifyingIoEventTypes) {
+        return function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
+            return qualifyingIoEventTypes.indexOf(ioEventType) != -1;
+        };
+    }
+
+    static regex(qualifyingIoEventTypes, fullPathRegex, regexFlags) {
+
+        var parsedRegex = null;
+        var typeEvaluator = EvaluatorUtil.ioEventType(qualifyingIoEventTypes);
+
+        if (typeof(regexFlags) != 'undefined') {
+            parsedRegex = new RegExp(fullPathRegex,regexFlags);
+        } else {
+            parsedRegex = new RegExp(fullPathRegex);
+        }
+
+        return function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
+            if (typeEvaluator(ioEventType,fullPath,optionalFsStats,optionalExtraInfo)) {
+                parsedRegex.lastIndex = 0;
+                return parsedRegex.exec(fullPath);
+            } else {
+                return false;
+            }
+        };
+    }
+
+}
+
+/**
+* IoReactorException
+* Class for wrapping exception
+*/
+class IoReactorException {
+
+    /**
+    * Constructor
+    *
+    * @param message error message
+    * @param sourceError source error object
+    */
+    constructor(message,sourceError) {
+        this.message = message;
+        this.sourceError = sourceError;
+    }
+}
+
+
+
+
+class ReactorResult {
+    constructor(success, ioEventType, fullPath, optionalFsStats, optionalExtraInfo, message) {
+        this._ioEventType = ioEventType;
+        this._fullPath = fullPath;
+        this._optionalFsStats = optionalFsStats;
+        this._optionalExtraInfo = optionalExtraInfo;
+        this._success = success;
+        this._message = message;
+    }
+    isSuccess() {
+        return this._success;
+    }
+    getMessage() {
+        return this._message;
+    }
+}
+
+
+
 
 class Evaluator {
     constructor(evaluatorFunction, reactors) {
@@ -16,6 +88,7 @@ class Evaluator {
         return this._reactors;
     }
 }
+
 
 
 class IoReactor {
@@ -186,4 +259,7 @@ class IoReactor {
 
 }
 
-module.exports = IoReactor;
+module.exports.IoReactor = IoReactor;
+module.exports.ReactorResult = ReactorResult;
+module.exports.IoReactorException = IoReactorException;
+module.exports.EvaluatorUtil = EvaluatorUtil;

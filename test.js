@@ -1,6 +1,6 @@
 
 var IoReactorService = require("./");
-var EvaluatorUtil = require('./evaluatorUtil');
+var EvaluatorUtil = require('./ioReactor').EvaluatorUtil;
 var util = require('util');
 
 var logger = function(severity, origin, message) {

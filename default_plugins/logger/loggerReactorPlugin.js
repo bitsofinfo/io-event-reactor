@@ -1,5 +1,5 @@
 var util = require('util');
-var ReactorResult = require('../../reactorUtil');
+var ReactorResult = require('../../ioReactor').ReactorResult;
 
 class LoggerReactorPlugin {
 
