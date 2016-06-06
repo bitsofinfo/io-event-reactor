@@ -11,7 +11,7 @@ class EvaluatorUtil {
     */
     static ioEventType(qualifyingIoEventTypes) {
         return function(ioEvent) {
-            return qualifyingIoEventTypes.indexOf(ioEvent.getEventType()) != -1;
+            return qualifyingIoEventTypes.indexOf(ioEvent.eventType) != -1;
         };
     }
 
@@ -38,7 +38,7 @@ class EvaluatorUtil {
         return function(ioEvent) {
             if (typeEvaluator(ioEvent)) {
                 parsedRegex.lastIndex = 0;
-                return parsedRegex.exec(ioEvent.getFullPath());
+                return parsedRegex.exec(ioEvent.fullPath);
             } else {
                 return false;
             }
@@ -69,7 +69,10 @@ class IoReactorException {
 
 /**
 * IoEvent class, encapsulates all information
-* that makes up an IoEvent triggered by a MonitoPlugin
+* that makes up an IoEvent triggered by a MonitorPlugin
+*
+* ReactorPlugin's react() method will be passed objects of
+* this specification
 *
 */
 class IoEvent {
@@ -79,16 +82,16 @@ class IoEvent {
         this._optionalFsStats = optionalFsStats;
         this._optionalExtraInfo = optionalExtraInfo;
     }
-    getEventType() {
+    get eventType() {
         return this._eventType;
     }
-    getFullPath() {
+    get fullPath() {
         return this._fullPath;
     }
-    getOptionalFsStats() {
+    get optionalFsStats() {
         return this._optionalFsStats;
     }
-    getOptionalExtraInfo() {
+    get optionalExtraInfo() {
         return this._optionalExtraInfo;
     }
 }
@@ -98,6 +101,9 @@ class IoEvent {
 * ReactorResult class, represents a result from the
 * invocation of a ReactorPlugin's react() method
 *
+* ReactorPlugins must fulfill/reject with an object
+* that meets this specification
+*
 */
 class ReactorResult {
     constructor(success, ioEvent, message, error) {
@@ -106,16 +112,16 @@ class ReactorResult {
         this._message = message;
         this._error = error;
     }
-    isSuccess() {
+    get isSuccess() {
         return this._success;
     }
-    getMessage() {
+    get message() {
         return this._message;
     }
-    getIoEvent() {
+    get ioEvent() {
         return this._ioEvent;
     }
-    getError() {
+    get error() {
         return this._error;
     }
 }

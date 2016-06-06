@@ -56,7 +56,7 @@ class LoggerReactorPlugin {
     react(ioEvent) {
         var self = this;
         return new Promise(function(resolve, reject) {
-            self._log('info',"REACT["+self.getName()+"]() invoked: " + ioEvent.getEventType() + " for: " + ioEvent.getFullPath);
+            self._log('info',"REACT["+self.getName()+"]() invoked: " + ioEvent.eventType + " for: " + ioEvent.fullPath);
             resolve(new ReactorResult(true,ioEvent,"no message"));
         });
     }
