@@ -3,12 +3,27 @@ var util = require('util');
 class EvaluatorUtil {
     constructor() {}
 
+    /**
+    * ioEventType() generate an Evaluator compliant function that will
+    * return true for all `qualifyingIoEventTypes`
+    *
+    * @param qualifyingIoEventTypes one or more of add, addDir, unlink, unlinkDir, change
+    */
     static ioEventType(qualifyingIoEventTypes) {
-        return function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
-            return qualifyingIoEventTypes.indexOf(ioEventType) != -1;
+        return function(ioEvent) {
+            return qualifyingIoEventTypes.indexOf(ioEvent.getEventType()) != -1;
         };
     }
 
+    /**
+    * regex() generate an Evaluator compliant function that will
+    * return true for all matching `qualifyingIoEventTypes` AND where
+    * fullPath also matches the given regex
+    *
+    * @param qualifyingIoEventTypes one or more of add, addDir, unlink, unlinkDir, change
+    * @param fullPathRegex regular expression to be applied to the full paths
+    * @param regexFlags
+    */
     static regex(qualifyingIoEventTypes, fullPathRegex, regexFlags) {
 
         var parsedRegex = null;
@@ -20,10 +35,10 @@ class EvaluatorUtil {
             parsedRegex = new RegExp(fullPathRegex);
         }
 
-        return function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
-            if (typeEvaluator(ioEventType,fullPath,optionalFsStats,optionalExtraInfo)) {
+        return function(ioEvent) {
+            if (typeEvaluator(ioEvent)) {
                 parsedRegex.lastIndex = 0;
-                return parsedRegex.exec(fullPath);
+                return parsedRegex.exec(ioEvent.getFullPath());
             } else {
                 return false;
             }
@@ -52,21 +67,56 @@ class IoReactorException {
 
 
 
-
-class ReactorResult {
-    constructor(success, ioEventType, fullPath, optionalFsStats, optionalExtraInfo, message) {
-        this._ioEventType = ioEventType;
+/**
+* IoEvent class, encapsulates all information
+* that makes up an IoEvent triggered by a MonitoPlugin
+*
+*/
+class IoEvent {
+    constructor(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
+        this._eventType = ioEventType;
         this._fullPath = fullPath;
         this._optionalFsStats = optionalFsStats;
         this._optionalExtraInfo = optionalExtraInfo;
+    }
+    getEventType() {
+        return this._eventType;
+    }
+    getFullPath() {
+        return this._fullPath;
+    }
+    getOptionalFsStats() {
+        return this._optionalFsStats;
+    }
+    getOptionalExtraInfo() {
+        return this._optionalExtraInfo;
+    }
+}
+
+
+/**
+* ReactorResult class, represents a result from the
+* invocation of a ReactorPlugin's react() method
+*
+*/
+class ReactorResult {
+    constructor(success, ioEvent, message, error) {
+        this._ioEvent = ioEvent;
         this._success = success;
         this._message = message;
+        this._error = error;
     }
     isSuccess() {
         return this._success;
     }
     getMessage() {
         return this._message;
+    }
+    getIoEvent() {
+        return this._ioEvent;
+    }
+    getError() {
+        return this._error;
     }
 }
 
@@ -211,20 +261,31 @@ class IoReactor {
     }
 
     _monitorEventCallback(eventType, fullPath, optionalFsStats, optionalExtraInfo) {
-        this._log("trace", "Monitor event: " + eventType + " " + fullPath + " "/* + util.inspect(optionalFsStats) + " " + util.inspect(optionalExtraInfo)*/);
+
+        // create IoEvent
+        var ioEvent = new IoEvent(eventType,fullPath,optionalFsStats,optionalExtraInfo);
 
         for (let evaluator of this._evaluators) {
-            if (evaluator.evaluate(eventType, fullPath, optionalFsStats, optionalExtraInfo)) {
+
+            if (evaluator.evaluate(ioEvent)) {
+
+                this._log('trace', "_monitorEventCallback(evaluator:passed) " + eventType + " " + fullPath);
+
                 for (let reactor of evaluator.getReactors()) {
 
-                    reactor.react(eventType, fullPath, optionalFsStats, optionalExtraInfo).then(function(result){
+                    this._log('trace', "_monitorEventCallback() calling ReactorPlugin["+reactor.getName()+"].react() for: " + eventType + " " + fullPath);
+
+                    reactor.react(ioEvent).then(function(result){
                         console.log(util.inspect(result));
 
                     }).catch(function(error) {
-                        var errMsg = "Reactor["+reactor.getName()+"] had error reacting to event["+eventType+"] file["+fullPath+"]";
+                        var errMsg = "ReactorPlugin["+reactor.getName()+"] had error reacting to event["+eventType+"] file["+fullPath+"]";
                         this._onError(errMsg,error);
                     });
                 }
+            } else {
+                this._log('trace', "_monitorEventCallback(evaluator:did not pass) " + eventType + " " + fullPath);
+
             }
         }
     }

@@ -49,18 +49,15 @@ class LoggerReactorPlugin {
     *
     * This function is required on ReactorPlugin implementations
     *
-    * @param ioEventType - one of add, addDir, unlink, unlinkDir, change
-    * @param fullPath
-    * @param optionalFsStats - https://nodejs.org/api/fs.html#fs_class_fs_stats
-    * @param optionalExtraInfo - will vary based on configured ReactorMonitor plugin
-    * @return Promise - when fulfilled/returns a result object, on reject an error
+    * @param ioEvent - IoEvent object to react to
+    * @return Promise - when fulfilled/rejected a ReactorResult object, on error the ReactorResult will contain the error
     *
     */
-    react(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
+    react(ioEvent) {
         var self = this;
         return new Promise(function(resolve, reject) {
-            self._log('info',"REACT["+self.getName()+"]() invoked: " + ioEventType + " for: " + fullPath);
-            resolve(new ReactorResult(true,ioEventType,fullPath,optionalFsStats,optionalExtraInfo,"no message"));
+            self._log('info',"REACT["+self.getName()+"]() invoked: " + ioEvent.getEventType() + " for: " + ioEvent.getFullPath);
+            resolve(new ReactorResult(true,ioEvent,"no message"));
         });
     }
 
