@@ -1,5 +1,5 @@
 var util = require('util');
-var ReactorResult = require('../../ioReactor').ReactorResult;
+var ReactorResult = require('../../../io-event-reactor-plugin-support').ReactorResult;
 
 class LoggerReactorPlugin {
 
@@ -11,7 +11,7 @@ class LoggerReactorPlugin {
     * @param pluginId - identifier for this plugin
     * @param reactorId - id of the IoReactor this Monitor plugin is bound to
     * @param logFunction - a function to be used for logging w/ signature function(severity, origin, message)
-    * @param initializedCallback - when this ReactorPlugin is full initialized, this callback should be invoked
+    * @param initializedCallback - when this ReactorPlugin is full initialized, this callback function(reactorPluginId) should be invoked
     *
     * @param pluginConfig - Logger configuration object that contains the following specific options, (NONE!)
     *
@@ -29,6 +29,8 @@ class LoggerReactorPlugin {
             this._logFunction = logFunction;
             this._errorCallback = errorCallback;
             this._initializedCallback = initializedCallback;
+
+            this._initializedCallback(this.getId());
 
         } catch(e) {
             var errMsg = this.__proto__.constructor.name +"["+this._reactorId+"] unexpected error: " + e;
@@ -62,7 +64,7 @@ class LoggerReactorPlugin {
         return new Promise(function(resolve, reject) {
             try {
                 self._log('info',"REACT["+self.getId()+"]() invoked: " + ioEvent.eventType + " for: " + ioEvent.fullPath);
-                resolve(new ReactorResult(true,self.getId(),self._reactorId,ioEvent,"no message"));
+                resolve(new ReactorResult(true,self.getId(),self._reactorId,ioEvent,"Logged info successfully"));
 
             } catch(e) {
                 reject(e);

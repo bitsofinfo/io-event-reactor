@@ -39,7 +39,7 @@ var config = {
             evaluators: [
                 {
                     evaluator: EvaluatorUtil.regex(['change'],'.*test\\d+.txt.*','ig'),
-                    reactors: ['logger1','shellExec1']
+                    reactors: ['logger1','shellExec1','mysql1']
                 }
             ],
 
@@ -72,9 +72,29 @@ var config = {
                           ],
 
                           commandGenerator: function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
-                            return ('myCommand ' + ioEventType + '->' + fullPath + '[' + optionalFsStats.size +']');
-                          },
+                            return [('myCommand ' + ioEventType + '->' + fullPath + '[' + optionalFsStats.size +']')];
+                          }
                       }
+                },
+
+                { id: "mysql1",
+                  plugin: "../io-event-reactor-plugin-mysql",
+                  config: {
+                        poolConfig : {
+                          host     : 'localhost',
+                          user     : 'root',
+                          password : '123',
+                          database : 'testdb'
+                        },
+
+                        sqlTemplates: [
+                            'INSERT into io-event-reactor-plugin-mysql (context,file,type) VALUES("{{{parentPath}}}","{{{filename}}}","{{{ioEventType}}}")'
+                        ],
+
+                        sqlGenerator: function(ioEventType,fullPath,optionalFsStats,optionalExtraInfo) {
+                            return [('INSERT into io-event-reactor-plugin-mysql (context,file,type) VALUES("'+fullPath+'","'+fullPath+'","'+ioEventType+'")')];
+                        },
+                    }
                 }
             ]
 

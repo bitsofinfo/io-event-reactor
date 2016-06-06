@@ -1,4 +1,7 @@
 var util = require('util');
+var IoEvent = require('../io-event-reactor-plugin-support').IoEvent;
+var ReactorResult = require('../io-event-reactor-plugin-support').ReactorResult;
+var IoReactorException = require('../io-event-reactor-plugin-support').IoReactorException;
 
 class EvaluatorUtil {
     constructor() {}
@@ -46,95 +49,6 @@ class EvaluatorUtil {
     }
 
 }
-
-/**
-* IoReactorException
-* Class for wrapping exception
-*/
-class IoReactorException {
-
-    /**
-    * Constructor
-    *
-    * @param message error message
-    * @param sourceError source error object
-    */
-    constructor(message,sourceError) {
-        this.message = message;
-        this.sourceError = sourceError;
-    }
-}
-
-
-
-/**
-* IoEvent class, encapsulates all information
-* that makes up an IoEvent triggered by a MonitorPlugin
-*
-* ReactorPlugin's react() method will be passed objects of
-* this specification
-*
-*/
-class IoEvent {
-    constructor(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
-        this._eventType = ioEventType;
-        this._fullPath = fullPath;
-        this._optionalFsStats = optionalFsStats;
-        this._optionalExtraInfo = optionalExtraInfo;
-    }
-    get eventType() {
-        return this._eventType;
-    }
-    get fullPath() {
-        return this._fullPath;
-    }
-    get optionalFsStats() {
-        return this._optionalFsStats;
-    }
-    get optionalExtraInfo() {
-        return this._optionalExtraInfo;
-    }
-}
-
-
-/**
-* ReactorResult class, represents a result from the
-* invocation of a ReactorPlugin's react() method
-*
-* ReactorPlugins must fulfill/reject with an object
-* that meets this specification
-*
-*/
-class ReactorResult {
-    constructor(success, pluginId, reactorName, ioEvent, message, error) {
-        this._pluginId = pluginId;
-        this._reactorName = reactorName,
-        this._ioEvent = ioEvent;
-        this._success = success;
-        this._message = message;
-        this._error = error;
-    }
-    get isSuccess() {
-        return this._success;
-    }
-    get message() {
-        return this._message;
-    }
-    get ioEvent() {
-        return this._ioEvent;
-    }
-    get error() {
-        return this._error;
-    }
-    get pluginId() {
-        return this._pluginId;
-    }
-    get reactorName() {
-        return this._reactorName;
-    }
-}
-
-
 
 
 class Evaluator {
@@ -219,7 +133,7 @@ class IoReactor {
                                                 this._id,
                                                 this._logFunction,
                                                 this._errorCallback,
-                                                this._monitorInitializedCallback,
+                                                this._reactorInitializedCallback.bind(this),
                                                 reactorConf.config);
 
                 this._reactors[reactor.getId()] = reactor;
@@ -272,6 +186,10 @@ class IoReactor {
 
     _monitorInitializedCallback() {
         this._log('info',"Monitor initialized OK");
+    }
+
+    _reactorInitializedCallback(reactorId) {
+        this._log('info',"Reactor["+reactorId+"] initialized OK");
     }
 
     _monitorEventCallback(eventType, fullPath, optionalFsStats, optionalExtraInfo) {
@@ -335,6 +253,4 @@ class IoReactor {
 }
 
 module.exports.IoReactor = IoReactor;
-module.exports.ReactorResult = ReactorResult;
-module.exports.IoReactorException = IoReactorException;
 module.exports.EvaluatorUtil = EvaluatorUtil;
