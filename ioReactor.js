@@ -106,7 +106,9 @@ class IoEvent {
 *
 */
 class ReactorResult {
-    constructor(success, ioEvent, message, error) {
+    constructor(success, pluginId, reactorName, ioEvent, message, error) {
+        this._pluginId = pluginId;
+        this._reactorName = reactorName,
         this._ioEvent = ioEvent;
         this._success = success;
         this._message = message;
@@ -123,6 +125,12 @@ class ReactorResult {
     }
     get error() {
         return this._error;
+    }
+    get pluginId() {
+        return this._pluginId;
+    }
+    get reactorName() {
+        return this._reactorName;
     }
 }
 
@@ -154,7 +162,7 @@ class IoReactor {
     *
     * Takes a config object with the following structure:
     *
-    *      name - REQUIRED name for this reactor
+    *      id - REQUIRED id for this reactor
     *
     *      logFunction - OPTIONAL logger function(severity, origin, message) for dealing with errors specific to this reactor, if not provided the default logFunction above will be used
     *      errorCallback - OPTIONAL error handler function(message, sourceErrorObject) for dealing with errors specific to this reactor, if not provided the default errorCallback above will be used
@@ -169,7 +177,7 @@ class IoReactor {
     *
     */
     constructor(config) {
-        this._name = config.name;
+        this._id = config.id;
 
         // capture our log function reference
         // and error handler callback
@@ -182,7 +190,7 @@ class IoReactor {
         try {
             var MonitorPlugin = require(config.monitor.plugin);
 
-            var monitor = new MonitorPlugin(this._name,
+            var monitor = new MonitorPlugin(this._id,
                                             this._logFunction,
                                             this._errorCallback,
                                             this._monitorEventCallback.bind(this),
@@ -192,7 +200,7 @@ class IoReactor {
             this._log("info","Successfully registered MonitorPlugin: " + config.monitor.plugin);
 
         } catch(e) {
-            var errMsg = this.__proto__.constructor.name+ "["+this._name+"] unexpected error creating MonitorPlugin: " + util.inspect(e);
+            var errMsg = this.__proto__.constructor.name+ "["+this._id+"] unexpected error creating MonitorPlugin: " + util.inspect(e);
             this._log('error',errMsg);
             throw new IoReactorException(errMsg,e);
         }
@@ -207,20 +215,21 @@ class IoReactor {
 
                 var ReactorPlugin = require(reactorConf.plugin);
 
-                var reactor = new ReactorPlugin(this._name,
+                var reactor = new ReactorPlugin(reactorConf.id,
+                                                this._id,
                                                 this._logFunction,
                                                 this._errorCallback,
                                                 this._monitorInitializedCallback,
                                                 reactorConf.config);
 
-                this._reactors[reactor.getName()] = reactor;
+                this._reactors[reactor.getId()] = reactor;
 
-                this._log("info","Successfully registered Reactor: " + reactor.getName());
+                this._log("info","Successfully registered Reactor: " + reactor.getId());
             }
 
 
         } catch(e) {
-            var errMsg = this.__proto__.constructor.name+ "["+this._name+"] unexpected error creating Reactors: " + util.inspect(e);
+            var errMsg = this.__proto__.constructor.name+ "["+this._id+"] unexpected error creating Reactors: " + util.inspect(e);
             this._log('error',errMsg);
             throw new IoReactorException(errMsg,e);
         }
@@ -234,13 +243,12 @@ class IoReactor {
             for (let evaluator of config.evaluators) {
 
                 var boundReactors = [];
-                for (let reactorName of evaluator.reactors) {
-                    var reactorInstance = this._reactors[reactorName];
+                for (let reactorId of evaluator.reactors) {
+                    var reactorInstance = this._reactors[reactorId];
                     if (typeof(reactorInstance) == 'undefined') {
                         throw "No ReactorPlugin registered w/ name: " + reactorName;
                     }
 
-                    console.log("PUSH " + reactorName);
                     boundReactors.push(reactorInstance);
                 }
 
@@ -250,7 +258,7 @@ class IoReactor {
             this._log("info","Successfully registered Evaluators: " + this._evaluators.length);
 
         } catch(e) {
-            var errMsg = this.__proto__.constructor.name+ "["+this._name+"] unexpected error creating Evaluators: " + util.inspect(e);
+            var errMsg = this.__proto__.constructor.name+ "["+this._id+"] unexpected error creating Evaluators: " + util.inspect(e);
             this._log('error',errMsg);
             throw new IoReactorException(errMsg,e);
         }
@@ -258,8 +266,8 @@ class IoReactor {
 
     }
 
-    getName() {
-        return this._name;
+    getId() {
+        return this._id;
     }
 
     _monitorInitializedCallback() {
@@ -279,13 +287,13 @@ class IoReactor {
 
                 for (let reactor of evaluator.getReactors()) {
 
-                    this._log('trace', "_monitorEventCallback() calling ReactorPlugin["+reactor.getName()+"].react() for: " + eventType + " " + fullPath);
+                    this._log('trace', "_monitorEventCallback() calling ReactorPlugin["+reactor.getId()+"].react() for: " + eventType + " " + fullPath);
 
                     reactor.react(ioEvent).then(function(result){
                         console.log(util.inspect(result));
 
                     }).catch(function(error) {
-                        var errMsg = "ReactorPlugin["+reactor.getName()+"] had error reacting to event["+eventType+"] file["+fullPath+"]";
+                        var errMsg = "ReactorPlugin["+reactor.getId()+"] had error reacting to event["+eventType+"] file["+fullPath+"]";
                         this._onError(errMsg,error);
                     });
                 }
@@ -302,10 +310,10 @@ class IoReactor {
     */
     _log(severity,message) {
         if (this._logFunction) {
-            this._logFunction(severity,(this.__proto__.constructor.name + '[' + this._name + ']'),message);
+            this._logFunction(severity,(this.__proto__.constructor.name + '[' + this._id + ']'),message);
 
         } else {
-            console.log(severity.toUpperCase() + " " + (this.__proto__.constructor.name + '[' + this._name + ']') + " " + message);
+            console.log(severity.toUpperCase() + " " + (this.__proto__.constructor.name + '[' + this._id + ']') + " " + message);
         }
     }
 

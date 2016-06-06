@@ -14,13 +14,14 @@ var errorCallback = function(message,error) {
 };
 
 var config = {
+
   logFunction: logger,
   errorCallback: errorCallback,
 
   ioReactors: [
 
         {
-            name: "ioReactor-test1",
+            id: "ioReactor-test1",
 
             monitor: {
 
@@ -35,10 +36,19 @@ var config = {
                     }
             },
 
-            reactors: [
-                { plugin: "./default_plugins/logger/loggerReactorPlugin" },
+            evaluators: [
+                {
+                    evaluator: EvaluatorUtil.regex(['change'],'.*test\\d+.txt.*','ig'),
+                    reactors: ['logger1','shellExec1']
+                }
+            ],
 
-                { plugin: "../io-event-reactor-plugin-shell-exec",
+            reactors: [
+                { id: "logger1",
+                  plugin: "./default_plugins/logger/loggerReactorPlugin" },
+
+                { id: "shellExec1",
+                  plugin: "../io-event-reactor-plugin-shell-exec",
                   config: {
                           statefulProcessCommandProxy: {
                               name: "ioReactor-test1-shell-exec",
@@ -65,13 +75,6 @@ var config = {
                             return ('myCommand ' + ioEventType + '->' + fullPath + '[' + optionalFsStats.size +']');
                           },
                       }
-                }
-            ],
-
-            evaluators: [
-                {
-                    evaluator: EvaluatorUtil.regex(['change'],'.*test\\d+.txt.*','ig'),
-                    reactors: ['logger','shell-exec']
                 }
             ]
 

@@ -8,27 +8,30 @@ class LoggerReactorPlugin {
     *
     * An io-event-reactor ReactorPlugin that just logs what it receives
     *
-    * @param reactorName - name of the IoReactor this Monitor plugin is bound to
+    * @param pluginId - identifier for this plugin
+    * @param reactorId - id of the IoReactor this Monitor plugin is bound to
     * @param logFunction - a function to be used for logging w/ signature function(severity, origin, message)
     * @param initializedCallback - when this ReactorPlugin is full initialized, this callback should be invoked
     *
     * @param pluginConfig - Logger configuration object that contains the following specific options, (NONE!)
     *
     */
-    constructor(reactorName,
+    constructor(pluginId,
+                reactorId,
                 logFunction,
                 errorCallback,
                 initializedCallback,
                 pluginConfig) {
 
         try {
-            this._reactorName = reactorName;
+            this._pluginId = pluginId;
+            this._reactorId = reactorId;
             this._logFunction = logFunction;
             this._errorCallback = errorCallback;
             this._initializedCallback = initializedCallback;
 
         } catch(e) {
-            var errMsg = this.__proto__.constructor.name +"["+this._reactorName+"] unexpected error: " + e;
+            var errMsg = this.__proto__.constructor.name +"["+this._reactorId+"] unexpected error: " + e;
             this._log('error',errMsg);
             this._onError(errMsg,e);
         }
@@ -36,12 +39,12 @@ class LoggerReactorPlugin {
     }
 
     /**
-    * getName() - core ReactorPlugin function
+    * getId() - core ReactorPlugin function
     *
     * @return the short name used to bind this reactor plugin to an Evaluator
     */
-    getName() {
-        return 'logger';
+    getId() {
+        return this._pluginId;
     }
 
     /**
@@ -58,9 +61,9 @@ class LoggerReactorPlugin {
 
         return new Promise(function(resolve, reject) {
             try {
-                self._log('info',"REACT["+self.getName()+"]() invoked: " + ioEvent.eventType + " for: " + ioEvent.fullPath);
-                resolve(new ReactorResult(true,ioEvent,"no message"));
-                
+                self._log('info',"REACT["+self.getId()+"]() invoked: " + ioEvent.eventType + " for: " + ioEvent.fullPath);
+                resolve(new ReactorResult(true,self.getId(),self._reactorId,ioEvent,"no message"));
+
             } catch(e) {
                 reject(e);
             }
@@ -72,7 +75,7 @@ class LoggerReactorPlugin {
     *  will set origin = this class' name
     */
     _log(severity,message) {
-        this._logFunction(severity,(this.__proto__.constructor.name + '[' + this._reactorName + ']'),message);
+        this._logFunction(severity,(this.__proto__.constructor.name + '[' + this._reactorId + ']['+this.getId()+']'),message);
     }
 
     /**
