@@ -4,9 +4,9 @@ var EvaluatorUtil = require('./ioReactor').EvaluatorUtil;
 var util = require('util');
 
 var logger = function(severity, origin, message) {
-    //if (severity != 'trace') {
+    if (/*severity != 'trace' && */severity != 'verbose') {
         console.log(severity + ' ' + origin + ' ' + message);
-    //}
+    }
 };
 
 var errorCallback = function(message,error) {
@@ -36,13 +36,42 @@ var config = {
             },
 
             reactors: [
-                { plugin: "./default_plugins/logger/loggerReactorPlugin" }
+                { plugin: "./default_plugins/logger/loggerReactorPlugin" },
+
+                { plugin: "../io-event-reactor-plugin-shell-exec",
+                  config: {
+                          statefulProcessCommandProxy: {
+                              name: "ioReactor-test1-shell-exec",
+                              max: 2,
+                              min: 2,
+                              idleTimeoutMS: 120000,
+                              logFunction: logger,
+                              processCommand: '/bin/bash',
+                              processArgs:  ['-s'],
+                              processRetainMaxCmdHistory : 10,
+                              processCwd : './',
+                              processUid : null,
+                              processGid : null,
+                              validateFunction: function(processProxy) {
+                                  return processProxy.isValid();
+                              }
+                          },
+
+                          commandTemplates: [
+                              'echo "{{{ioEventType}}} for fullPath: {{{fullPath}}}, parentPath:{{{parentPath}}}, filename:{{{filename}}} stats.size: {{{optionalFsStats.size}}}"'
+                          ],
+
+                          commandGenerator: function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
+                            return ('myCommand ' + ioEventType + '->' + fullPath + '[' + optionalFsStats.size +']');
+                          },
+                      }
+                }
             ],
 
             evaluators: [
                 {
                     evaluator: EvaluatorUtil.regex(['change'],'.*test\\d+.txt.*','ig'),
-                    reactors: ['logger']
+                    reactors: ['logger','shell-exec']
                 }
             ]
 

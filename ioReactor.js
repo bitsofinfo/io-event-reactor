@@ -165,7 +165,7 @@ class IoReactor {
     *           - evaluator: function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo), if function returns 'true' all attached reactors will be invoked. If false, nothing will happen. See the 'Evaluators' class for methods that will generate an applicable function for simple use-cases.
     *           - reactors: array[] of reactor names that should be invoked if the 'evaluator' function returns 'true'
     *
-    *      reactors - REQUIRED array[] of one of more object configurations io-even-reactor "ReactorPlugin"'s' - see available list at: https://github.com/bitsofinfo/io-event-reactor
+    *      reactors - REQUIRED array[] of one of more reactor plugin configurations io-even-reactor "ReactorPlugin"'s' - see available list at: https://github.com/bitsofinfo/io-event-reactor
     *
     */
     constructor(config) {
@@ -211,7 +211,7 @@ class IoReactor {
                                                 this._logFunction,
                                                 this._errorCallback,
                                                 this._monitorInitializedCallback,
-                                                reactorConf);
+                                                reactorConf.config);
 
                 this._reactors[reactor.getName()] = reactor;
 
@@ -224,7 +224,6 @@ class IoReactor {
             this._log('error',errMsg);
             throw new IoReactorException(errMsg,e);
         }
-
 
         /**
         * #3 Build our evaluators and bind to reactors
@@ -241,6 +240,7 @@ class IoReactor {
                         throw "No ReactorPlugin registered w/ name: " + reactorName;
                     }
 
+                    console.log("PUSH " + reactorName);
                     boundReactors.push(reactorInstance);
                 }
 
