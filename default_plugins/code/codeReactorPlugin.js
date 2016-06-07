@@ -1,19 +1,19 @@
 var util = require('util');
 var ReactorResult = require('../../../io-event-reactor-plugin-support').ReactorResult;
 
-class LoggerReactorPlugin {
+class CodeReactorPlugin {
 
     /**
     * Constructor
     *
-    * An io-event-reactor ReactorPlugin that just logs what it receives
+    * An io-event-reactor ReactorPlugin that just invokes the a provided function
     *
     * @param pluginId - identifier for this plugin
     * @param reactorId - id of the IoReactor this Monitor plugin is bound to
     * @param logFunction - a function to be used for logging w/ signature function(severity, origin, message)
     * @param initializedCallback - when this ReactorPlugin is full initialized, this callback function(reactorPluginId) should be invoked
     *
-    * @param pluginConfig - Logger configuration object that contains the following specific options, (NONE!)
+    * @param pluginConfig - Configuration object containing one property named 'codeFunction' with the signature function(ioEvent) that should return a promise
     *
     */
     constructor(pluginId,
@@ -29,6 +29,7 @@ class LoggerReactorPlugin {
             this._logFunction = logFunction;
             this._errorCallback = errorCallback;
             this._initializedCallback = initializedCallback;
+            this._codeFunction = pluginConfig.codeFunction;
 
             this._initializedCallback(this.getId());
 
@@ -64,10 +65,20 @@ class LoggerReactorPlugin {
         return new Promise(function(resolve, reject) {
             try {
                 self._log('info',"react["+self.getId()+"]() invoked: " + ioEvent.eventType + " for: " + ioEvent.fullPath);
-                resolve(new ReactorResult(true,self.getId(),self._reactorId,ioEvent,"Logged info successfully"));
+
+                // exec the codeFunction()
+                self._codeFunction(ioEvent).then(function(result) {
+
+                    resolve(new ReactorResult(true,self.getId(),self._reactorId,ioEvent,"Logged info successfully"));
+
+                }).catch(function(error) {
+
+                    reject(new ReactorResult(false,self.getId(),self._reactorId,ioEvent,"Error executing codeFunction: " + error, error))
+
+                });
 
             } catch(e) {
-                reject(new ReactorResult(false,self.getId(),self._reactorId,ioEvent,"Error logging: " + error, error));
+                reject(new ReactorResult(false,self.getId(),self._reactorId,ioEvent,"Error executing codeFunction: " + error, error));
             }
         });
     }
@@ -89,4 +100,4 @@ class LoggerReactorPlugin {
 
 }
 
-module.exports = LoggerReactorPlugin;
+module.exports = CodeReactorPlugin;

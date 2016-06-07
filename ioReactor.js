@@ -3,7 +3,13 @@ var IoEvent = require('../io-event-reactor-plugin-support').IoEvent;
 var ReactorResult = require('../io-event-reactor-plugin-support').ReactorResult;
 var IoReactorException = require('../io-event-reactor-plugin-support').IoReactorException;
 
+/**
+* EvaluatorUtil utility class for generating
+* some pre-defined evaluator compliant functions
+*
+*/
 class EvaluatorUtil {
+
     constructor() {}
 
     /**
@@ -49,6 +55,7 @@ class EvaluatorUtil {
     }
 
 }
+
 
 
 class Evaluator {
@@ -197,17 +204,22 @@ class IoReactor {
         // create IoEvent
         var ioEvent = new IoEvent(eventType,fullPath,optionalFsStats,optionalExtraInfo);
 
+        // go through each evaluator
         for (let evaluator of this._evaluators) {
 
+            // let it evaluate the event
             if (evaluator.evaluate(ioEvent)) {
 
                 this._log('trace', "_monitorEventCallback(evaluator:passed) " + eventType + " " + fullPath);
 
+                // the evaluator passed, lets now let all configured reactors to react()
                 for (let reactor of evaluator.getReactors()) {
 
                     this._log('trace', "_monitorEventCallback() calling ReactorPlugin["+reactor.getId()+"].react() for: " + eventType + " " + fullPath);
 
-                    reactor.react(ioEvent).then(function(result){
+                    // react to it!
+                    reactor.react(ioEvent).then(function(result) {
+
                         console.log(util.inspect(result));
 
                     }).catch(function(error) {

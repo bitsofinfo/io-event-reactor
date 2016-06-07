@@ -39,11 +39,25 @@ var config = {
             evaluators: [
                 {
                     evaluator: EvaluatorUtil.regex(['change'],'.*test\\d+.txt.*','ig'),
-                    reactors: ['logger1','shellExec1','mysql1']
+                    reactors: ['code1','logger1','shellExec1','mysql1']
                 }
             ],
 
             reactors: [
+
+                { id: "code1",
+                  plugin: "./default_plugins/code/codeReactorPlugin",
+                  config: {
+                      codeFunction: function(ioEvent) {
+                          return new Promise(function(resolve,reject){
+                              var dateFormat = require('dateformat');
+                              ioEvent.context.timestamp = dateFormat(new Date(), "yyyymmdd_hhMMssL");
+                              resolve(true);
+                          });
+                      }
+                  }
+                },
+
                 { id: "logger1",
                   plugin: "./default_plugins/logger/loggerReactorPlugin" },
 
@@ -68,11 +82,11 @@ var config = {
                           },
 
                           commandTemplates: [
-                              'echo "{{{ioEventType}}} for fullPath: {{{fullPath}}}, parentPath:{{{parentPath}}}, filename:{{{filename}}} stats.size: {{{optionalFsStats.size}}}"'
+                              'echo "{{{ioEvent.eventType}}} for fullPath: {{{ioEvent.fullPath}}}, parentPath:{{{ioEvent.parentPath}}}, filename:{{{ioEvent.filename}}} stats.size: {{{ioEvent.optionalFsStats.size}}}"'
                           ],
 
-                          commandGenerator: function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo) {
-                            return [('myCommand ' + ioEventType + '->' + fullPath + '[' + optionalFsStats.size +']')];
+                          commandGenerator: function(ioEvent) {
+                            return [('myCommand ' + ioEvent.eventType + '->' + ioEvent.fullPath + '[' + (ioEvent.optionalFsStats ? ioEvent.optionalFsStats.size : '?') +']')];
                           }
                       }
                 },
@@ -88,11 +102,11 @@ var config = {
                         },
 
                         sqlTemplates: [
-                            'INSERT into io-event-reactor-plugin-mysql (context,file,type) VALUES("{{{parentPath}}}","{{{filename}}}","{{{ioEventType}}}")'
+                            'INSERT INTO testtable (context,file,type) VALUES("{{{ioEvent.context.timestamp}}}","{{{ioEvent.filename}}}","{{{ioEvent.eventType}}}")'
                         ],
 
-                        sqlGenerator: function(ioEventType,fullPath,optionalFsStats,optionalExtraInfo) {
-                            return [('INSERT into io-event-reactor-plugin-mysql (context,file,type) VALUES("'+fullPath+'","'+fullPath+'","'+ioEventType+'")')];
+                        sqlGenerator: function(ioEvent) {
+                            return [('INSERT INTO testtable (context,file,type) VALUES("'+ioEvent.context.timestamp+'","'+ioEvent.fullPath+'","'+ioEvent.eventType+'")')];
                         },
                     }
                 }
