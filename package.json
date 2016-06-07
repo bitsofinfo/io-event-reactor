@@ -20,7 +20,7 @@
         "directories"
     ],
     "dependencies":{
-        
+        "node-uuid":"latest"
     },
     "devDependencies":{
         "mocha":"latest"

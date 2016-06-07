@@ -1,3 +1,5 @@
+'use strict'
+
 var IoReactor = require('./ioReactor').IoReactor;
 var IoReactorException = require('./ioReactor').IoReactorException;
 var util = require('util');
@@ -49,7 +51,7 @@ class IoReactorService {
 
                 var ioReactor = new IoReactor(ioReactorConfig);
                 this.ioReactors.push(ioReactor);
-                this._log("info", "Registered IoReactor["+ioReactorConfig.name+"]");
+                this._log("info", "Registered IoReactor["+ioReactorConfig.id+"]");
 
             } catch(e) {
                 var errMsg = this.__proto__.constructor.name + ' Unexpected error registering IoReactor config: ' + config + " error:" + util.inspect(e);

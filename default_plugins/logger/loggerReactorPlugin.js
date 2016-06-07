@@ -1,3 +1,5 @@
+'use strict'
+
 var util = require('util');
 var ReactorResult = require('../../../io-event-reactor-plugin-support').ReactorResult;
 

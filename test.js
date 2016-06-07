@@ -24,8 +24,8 @@ var config = {
             id: "ioReactor-test1",
 
             monitor: {
-
-                    plugin: "../io-event-reactor-plugin-chokidar",
+                plugin: "../io-event-reactor-plugin-chokidar",
+                config: {
                     paths: ['/tmp/test1'],
                     options: {
                         alwaysStat: false,
@@ -34,6 +34,7 @@ var config = {
                             pollInterval: 100
                         }
                     }
+                }
             },
 
             evaluators: [

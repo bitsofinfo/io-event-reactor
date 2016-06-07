@@ -1,3 +1,5 @@
+'use strict'
+
 var util = require('util');
 var IoEvent = require('../io-event-reactor-plugin-support').IoEvent;
 var ReactorResult = require('../io-event-reactor-plugin-support').ReactorResult;
@@ -116,7 +118,7 @@ class IoReactor {
                                             this._errorCallback,
                                             this._monitorEventCallback.bind(this),
                                             this._monitorInitializedCallback,
-                                            config.monitor);
+                                            config.monitor.config);
 
             this._log("info","Successfully registered MonitorPlugin: " + config.monitor.plugin);
 
@@ -217,14 +219,17 @@ class IoReactor {
 
                     this._log('trace', "_monitorEventCallback() calling ReactorPlugin["+reactor.getId()+"].react() for: " + eventType + " " + fullPath);
 
+                    var self = this;
+
                     // react to it!
                     reactor.react(ioEvent).then(function(result) {
 
-                        console.log(util.inspect(result));
+                        self._log('trace',util.inspect(result));
 
-                    }).catch(function(error) {
-                        var errMsg = "ReactorPlugin["+reactor.getId()+"] had error reacting to event["+eventType+"] file["+fullPath+"]";
-                        this._onError(errMsg,error);
+                    }).catch(function(result) {
+                        var errMsg = "ReactorPlugin["+reactor.getId()+"] had error reacting to event["+result.ioEvent.eventType+"] file["+result.ioEvent.fullPath+"]: " + result.error;
+                        self._log('error',errMsg);
+                        self._onError(errMsg,result.error);
                     });
                 }
             } else {
