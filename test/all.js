@@ -83,7 +83,7 @@ function generateMockConfig(ioEventsReactedTo, evaluatorFunction, monitorTrigger
 
 describe('core-test', function() {
 
-    it('Start a mock monitor, validate that a few generated events pass the monitor -> evaluator -> reactor flow', function(done) {
+    it('Start a mock monitor, validate that a few simple events pass the monitor -> evaluator -> reactor engine flow', function(done) {
 
         this.timeout(5000);
 
@@ -94,48 +94,56 @@ describe('core-test', function() {
         var mockConfig = generateMockConfig(ioEventsReactedTo,
                                             EvaluatorUtil.regex(['add','unlink'],'.*testFile\\d+','ig'),
                                                 [
-                                                    // generate an add
+                                                    // generate an add, should react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('add','/tmp/testFile1',{size:100},null);
                                                                       },
                                                       timeout: 1000
                                                     },
 
-                                                    // generate an unlink
+                                                    // generate an unlink, should react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('unlink','/tmp/testFile1',{size:100},null);
                                                                       },
                                                       timeout: 1000
                                                     },
 
-                                                    // generate an unlinkDir
+                                                    // generate an unlinkDir, should not react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('unlinkDir','/tmp/testFile1',{size:100},null);
                                                                       },
                                                       timeout: 1000
                                                     },
 
-                                                    // generate an change for diff file
+                                                    // generate an change for diff file, should not react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('change','/tmp/testFile1',{size:100},null);
                                                                       },
                                                       timeout: 1000
                                                     },
 
-                                                    // generate an add for diff file (letter, not number)
+                                                    // generate an add for diff file (letter, not number), should not react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('add','/tmp/testFileA',{size:100},null);
                                                                       },
                                                       timeout: 1000
-                                                    }
+                                                    },
+
+                                                    // generate an add, should react to this
+                                                    { eventGenerator: function() {
+                                                                       return new IoEvent('add','/tmp/testFile100',{size:100},null);
+                                                                      },
+                                                      timeout: 1000
+                                                    },
                                                 ]);
 
 
+        // start the reactor
         var reactor = new IoReactorService(mockConfig);
 
+        // check that ioEventsReactedTo contains 3 reaacted to events...
         setTimeout(function(){
-            console.log(ioEventsReactedTo.length);
-            assert.equal(ioEventsReactedTo.length, 2);
+            assert.equal(ioEventsReactedTo.length, 3);
             done();
         },3000);
 
