@@ -4,6 +4,8 @@ Node.js module for reacting to filesystem events by invoking plugins that match 
 
 Note, this project uses Ecmascript 6 class definition syntax, you need to run node 4.4.5 + w/ `node --use-strict test.js`
 
+### Plugin support
+* [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support) - Required module for developing any plugin
 
 ### Monitor plugins
 * [io-event-reactor-plugin-chokidar](https://github.com/bitsofinfo/io-event-reactor-plugin-chokidar) - Monitor the filesystem for changes using [Chokidar](https://github.com/paulmillr/chokidar)
