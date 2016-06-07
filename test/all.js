@@ -35,7 +35,7 @@ function generateMockConfig(ioEventsReactedTo, evaluatorFunction, monitorTrigger
                   {
                       id: "ioReactor-test1",
 
-                      // mock monitor, will trigger mocked IoEvents according to monitoTriggerConfigs
+                      // mock monitor, will trigger mocked IoEvents according to monitorTriggerConfigs
                       monitor: {
                           plugin: "./test/mockMonitor",
                           config: {
