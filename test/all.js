@@ -98,42 +98,42 @@ describe('core-test', function() {
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('add','/tmp/testFile1',{size:100},null);
                                                                       },
-                                                      timeout: 1000
+                                                      timeout: 100
                                                     },
 
                                                     // generate an unlink, should react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('unlink','/tmp/testFile1',{size:100},null);
                                                                       },
-                                                      timeout: 1000
+                                                      timeout: 100
                                                     },
 
                                                     // generate an unlinkDir, should not react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('unlinkDir','/tmp/testFile1',{size:100},null);
                                                                       },
-                                                      timeout: 1000
+                                                      timeout: 100
                                                     },
 
                                                     // generate an change for diff file, should not react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('change','/tmp/testFile1',{size:100},null);
                                                                       },
-                                                      timeout: 1000
+                                                      timeout: 100
                                                     },
 
                                                     // generate an add for diff file (letter, not number), should not react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('add','/tmp/testFileA',{size:100},null);
                                                                       },
-                                                      timeout: 1000
+                                                      timeout: 100
                                                     },
 
                                                     // generate an add, should react to this
                                                     { eventGenerator: function() {
                                                                        return new IoEvent('add','/tmp/testFile100',{size:100},null);
                                                                       },
-                                                      timeout: 1000
+                                                      timeout: 100
                                                     },
                                                 ]);
 
@@ -145,7 +145,7 @@ describe('core-test', function() {
         setTimeout(function(){
             assert.equal(ioEventsReactedTo.length, 3);
             done();
-        },3000);
+        },2000);
 
     });
 

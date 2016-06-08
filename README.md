@@ -15,3 +15,12 @@ Note, this project uses Ecmascript 6 class definition syntax, you need to run no
 * [logger](default_plugins/logger) - Log reactions to monitored events
 * [io-event-reactor-plugin-shell-exec](https://github.com/bitsofinfo/io-event-reactor-plugin-shell-exec) - Exec shell commands via [stateful-process-command-proxy](https://github.com/bitsofinfo/stateful-process-command-proxy)
 * [io-event-reactor-plugin-mysql](https://github.com/bitsofinfo/io-event-reactor-plugin-mysql) - Exec SQL against data in MySql via [node-mysql](https://github.com/felixge/node-mysql)
+
+
+### Unit tests
+
+To run the unit tests go to the root of the project and run the following.
+
+```
+mocha test/all.js
+```
