@@ -130,14 +130,14 @@ for more details on creating plugins.
 
 ### <a id="reactors"></a> Reactor plugins
 
-#### Default Plugins
+ **Default Plugins**
 
 The plugins below are simple and just come with this module by default.
 
 * [code](default_plugins/code) - Permits arbitrary execution of javascript, to use: `./default_plugins/code/codeReactorPlugin`
 * [logger](default_plugins/logger) - Log reactions to monitored events, to use: `./default_plugins/logger/loggerReactorPlugin`
 
-### External module plugins
+**External module plugins**
 * [io-event-reactor-plugin-shell-exec](https://github.com/bitsofinfo/io-event-reactor-plugin-shell-exec) - Exec shell commands via [stateful-process-command-proxy](https://github.com/bitsofinfo/stateful-process-command-proxy)
 * [io-event-reactor-plugin-mysql](https://github.com/bitsofinfo/io-event-reactor-plugin-mysql) - Exec SQL against data in MySql via [node-mysql](https://github.com/felixge/node-mysql)
 
