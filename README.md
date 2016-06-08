@@ -12,7 +12,7 @@ Node.js module for reacting to filesystem events by invoking plugins that match 
 * [Monitor Plugins](#monitors)
 * [Reactor Plugins](#reactors)
 
-## <a id="works"></a> How it works
+##<a id="works"></a>How it works
 
 The basic concept is this; you have a `monitor` that listens for IO events for particular paths
 on the filesystem. As these IO events occur, they are passed on to one or more `evaluators` to
@@ -31,17 +31,17 @@ which evaluate whether or not an `IoEvent` should be passed on to one or more `r
 
 <img src="docs/diag2.png" width="600"/>
 
-### <a id="requirements"></a> Requirements
+###<a id="requirements"></a>Requirements
 
 * [Node](https://nodejs.org/en/) 4.4.5+
 
-### <a id="install"></a> Install
+###<a id="install"></a>Install
 
 ```
 npm install io-event-reactor
 ```
 
-### <a id="usage"></a> Usage
+###<a id="usage"></a>Usage
 
 Usage is pretty straight forward, one of the better starting points to to review the [io-event-reactor-integration-tests](https://github.com/bitsofinfo/io-event-reactor-integration-tests) `sampleIoReactor.js`
 project to see a working example and configuration.
@@ -117,7 +117,7 @@ var reactor = new IoReactorService(config);
 For more info on configuration options see the JSDoc in [ioReactorService.js](https://github.com/bitsofinfo/io-event-reactor/blob/master/ioReactorService.js)
 and [ioReactor.js](https://github.com/bitsofinfo/io-event-reactor/blob/master/ioReactor.js)
 
-### <a id="plugins"></a> Plugin support
+###<a id="plugins"></a>Plugin support
 
 This module is extensible via plugin contracts for both `monitors` and `reactors`. You can pretty much customize it to
 integrate it with anything you want. See [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support)
@@ -125,10 +125,10 @@ for more details on creating plugins.
 
 * [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support) - Required module for developing any plugin
 
-### <a id="monitors"></a> Monitor plugins
+###<a id="monitors"></a>Monitor plugins
 * [io-event-reactor-plugin-chokidar](https://github.com/bitsofinfo/io-event-reactor-plugin-chokidar) - Monitor the filesystem for changes using [Chokidar](https://github.com/paulmillr/chokidar)
 
-### <a id="reactors"></a> Reactor plugins
+###<a id="reactors"></a>Reactor plugins
 
  **Default Plugins**
 
