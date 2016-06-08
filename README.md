@@ -108,7 +108,15 @@ var reactor = new IoReactorService(config);
 7. In another shell: `touch /mtp/myapp/bitsofinfo.txt`
 8. You should see output: `I just reacted to an IoEvent! type: add file: /tmp/myapp/bitsofinfo.txt`
 
+For more info on configuration options see the JSDoc in [ioReactorService.js](https://github.com/bitsofinfo/io-event-reactor/blob/master/ioReactorService.js)
+and [ioReactor.js](https://github.com/bitsofinfo/io-event-reactor/blob/master/ioReactor.js)
+
 ### <a id="plugins"></a> Plugin support
+
+This module is extensible via plugin contracts for both `monitors` and `reactors`. You can pretty much customize it to
+integrate it with anything you want. See [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support)
+for more details on creating plugins.
+
 * [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support) - Required module for developing any plugin
 
 ### <a id="monitors"></a> Monitor plugins
