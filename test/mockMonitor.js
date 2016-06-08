@@ -18,9 +18,7 @@ class MockMonitorPlugin {
             this._ioEventCallback = ioEventCallback;
             this._initializedCallback = initializedCallback;
 
-            this._initializedCallback();
-
-            console.log(pluginConfig);
+            this._initializedCallback();    
 
             // For each monitorTrigger config
             for (let monitorTrigger of pluginConfig.monitorTriggers) {
