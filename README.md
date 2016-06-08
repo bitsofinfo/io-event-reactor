@@ -4,7 +4,15 @@ Node.js module for reacting to filesystem events by invoking plugins that match 
 
 [![NPM](https://nodei.co/npm/io-event-reactor.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/io-event-reactor/)
 
-## How it works
+* [How it works](#works)
+* [Requirements](#requirements)
+* [Install](#install)
+* [Usage](#usage)
+* [Plugins](#plugins)
+* [Monitor Plugins](#monitors)
+* [Reactor Plugins](#reactors)
+
+## <a id="works"></a> How it works
 
 The basic concept is this; you have a `monitor` that listens for IO events for particular paths
 on the filesystem. As these IO events occur, they are passed on to one or more `evaluators` to
@@ -23,30 +31,29 @@ which evaluate whether or not an `IoEvent` should be passed on to one or more `r
 
 <img src="docs/diag2.png" width="600"/>
 
+### <a id="requirements"></a> Requirements
 
-### Install
+* [Node](https://nodejs.org/en/) 4.4.5+
+
+### <a id="install"></a> Install
 
 ```
 npm install io-event-reactor
 ```
 
-
-### Usage
+### <a id="usage"></a> Usage
 
 Usage is pretty straight forward, one of the better starting points to to review the [io-event-reactor-integration-tests](https://github.com/bitsofinfo/io-event-reactor-integration-tests) `sampleIoReactor.js`
 project to see a working example and configuration.
 
-### Requirements
 
-* [Node](https://nodejs.org/en/) 4.4.5+
-
-### Plugin support
+### <a id="plugins"></a> Plugin support
 * [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support) - Required module for developing any plugin
 
-### Monitor plugins
+### <a id="monitors"></a> Monitor plugins
 * [io-event-reactor-plugin-chokidar](https://github.com/bitsofinfo/io-event-reactor-plugin-chokidar) - Monitor the filesystem for changes using [Chokidar](https://github.com/paulmillr/chokidar)
 
-### Reactor plugins
+### <a id="reactors"></a> Reactor plugins
 * [code](default_plugins/code) - Permits arbitrary execution of javascript
 * [logger](default_plugins/logger) - Log reactions to monitored events
 * [io-event-reactor-plugin-shell-exec](https://github.com/bitsofinfo/io-event-reactor-plugin-shell-exec) - Exec shell commands via [stateful-process-command-proxy](https://github.com/bitsofinfo/stateful-process-command-proxy)
