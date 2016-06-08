@@ -16,7 +16,10 @@ class CodeReactorPlugin {
     * @param logFunction - a function to be used for logging w/ signature function(severity, origin, message)
     * @param initializedCallback - when this ReactorPlugin is full initialized, this callback function(reactorPluginId) should be invoked
     *
-    * @param pluginConfig - Configuration object containing one property named 'codeFunction' with the signature function(ioEvent) that should return a promise
+    * @param pluginConfig - Configuration object containing one
+    *                       property named 'codeFunction' with the signature function(ioEvent) that should return a promise
+    *                       whatever is returned on fulfillment will be attached to the ReactorResult context under a property
+    *                       called '[pluginId]_reactor_result'
     *
     */
     constructor(pluginId,
@@ -72,7 +75,9 @@ class CodeReactorPlugin {
                 // exec the codeFunction()
                 self._codeFunction(ioEvent).then(function(result) {
 
-                    resolve(new ReactorResult(true,self.getId(),self._reactorId,ioEvent,"Logged info successfully"));
+                    // bag the result onto the ioevent context
+                    ioEvent.context[self.getId() + '_reactor_result'] = result;
+                    resolve(new ReactorResult(true,self.getId(),self._reactorId,ioEvent,"CodeReactorPlugin["+self.getId()+"] executed OK with result: " + result));
 
                 }).catch(function(error) {
 
