@@ -12,12 +12,12 @@ decide whether or not the `IoEvent` should be reacted to by one or more configur
 The entire latter sequence is encapsulated in an `IoReactor` instance that manages the flow
 between the three described components.
 
-![Alt text](/docs/diag1.png "Diagram1" =250x)
+<img src="docs/diag1.png" width="150"/>)
 
 With this module, you construct and configure a single `IoReactorService` which can manage and contain
 one or more `IoReactor` instances, as many as you wish, providing for lots of flexibility for reacting to filesystem events.
 
-![Alt text](/docs/diag2.png "Diagram2" =250x)
+<img src="docs/diag2.png" width="300"/>
 
 
 ### Install
