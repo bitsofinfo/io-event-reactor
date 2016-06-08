@@ -4,7 +4,7 @@ var util = require('util');
 var assert = require('assert');
 var EvaluatorUtil = require('../ioReactor').EvaluatorUtil;
 var EvaluatorUtil = require('../ioReactor').EvaluatorUtil;
-var IoEvent = require('../../io-event-reactor-plugin-support').IoEvent;
+var IoEvent = require('io-event-reactor-plugin-support').IoEvent;
 var IoReactorService = require('../ioReactorService');
 
 var logger = function(severity, origin, message) {

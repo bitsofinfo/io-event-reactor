@@ -1,9 +1,9 @@
 'use strict'
 
 var util = require('util');
-var IoEvent = require('../io-event-reactor-plugin-support').IoEvent;
-var ReactorResult = require('../io-event-reactor-plugin-support').ReactorResult;
-var IoReactorException = require('../io-event-reactor-plugin-support').IoReactorException;
+var IoEvent = require('io-event-reactor-plugin-support').IoEvent;
+var ReactorResult = require('io-event-reactor-plugin-support').ReactorResult;
+var IoReactorException = require('io-event-reactor-plugin-support').IoReactorException;
 
 /**
 * EvaluatorUtil utility class for generating

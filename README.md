@@ -2,7 +2,13 @@
 
 Node.js module for reacting to filesystem events by invoking plugins that match configurable conditions
 
-Note, this project uses Ecmascript 6 class definition syntax, you need to run node 4.4.5 + w/ `node --use-strict test.js`
+### Install
+
+`npm install io-event-reactor`
+
+### Requirements
+
+* [Node](https://nodejs.org/en/) 4.4.5+
 
 ### Plugin support
 * [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support) - Required module for developing any plugin

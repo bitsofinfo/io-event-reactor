@@ -1,7 +1,7 @@
 {
     "name":"io-event-reactor",
     "version":"1.0.0-beta.1",
-    "description":"Module for conditionally reacting to watches and monitors on filesystem events by executing customizable plugins such as executing system commands, invoking SQL, etc",
+    "description":"Module for conditionally reacting to watches and monitors on filesystem events by executing customizable plugins",
     "main":"ioReactorService.js",
     "directories":{
         "test":"test"
@@ -13,6 +13,8 @@
         "io",
         "event",
         "monitor",
+        "changes",
+        "alert",
         "watch",
         "file",
         "directory",
@@ -20,7 +22,8 @@
         "directories"
     ],
     "dependencies":{
-        "node-uuid":"latest"
+        "node-uuid":"latest",
+        "io-event-reactor-plugin-support":"latest"
     },
     "devDependencies":{
         "mocha":"latest"
