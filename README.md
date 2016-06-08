@@ -1,6 +1,6 @@
 # io-event-reactor
 
-Node.js module for reacting to filesystem events by invoking plugins that match configurable evaluators. Works with both *nix and Windows platforms.
+Node.js module for reacting to filesystem events by invoking plugins that match configurable evaluators.
 
 [![NPM](https://nodei.co/npm/io-event-reactor.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/io-event-reactor/)
 
@@ -12,12 +12,12 @@ decide whether or not the `IoEvent` should be reacted to by one or more configur
 The entire latter sequence is encapsulated in an `IoReactor` instance that manages the flow
 between the three described components.
 
-![Alt text](/diag1.png "Diagram1")
+![Alt text](/docs/diag1.png "Diagram1")
 
 With this module, you construct and configure a single `IoReactorService` which can manage and contain
 one or more `IoReactor` instances, as many as you wish, providing for lots of flexibility for reacting to filesystem events.
 
-![Alt text](/diag2.png "Diagram2")
+![Alt text](/docs/diag2.png "Diagram2")
 
 
 ### Install
