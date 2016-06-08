@@ -17,7 +17,7 @@ between the three described components.
 With this module, you construct and configure a single `IoReactorService` which can manage and contain
 one or more `IoReactor` instances, as many as you wish, providing for lots of flexibility for reacting to filesystem events.
 
-<img src="docs/diag2.png" width="800"/>
+<img src="docs/diag2.png" width="600"/>
 
 
 ### Install
