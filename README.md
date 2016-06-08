@@ -17,12 +17,24 @@ between the three described components.
 With this module, you construct and configure a single `IoReactorService` which can manage and contain
 one or more `IoReactor` instances, as many as you wish, providing for lots of flexibility for reacting to filesystem events.
 
+When you configure the `IoReactorService` and its `IoReactor` instances, you specify which plugins you would like
+to use to fulfill the `monitor` and `reactor` roles. For `evaluators` you simply provide one or more functions
+which evaluate whether or not an `IoEvent` should be passed on to one or more `reactors`.
+
 <img src="docs/diag2.png" width="600"/>
 
 
 ### Install
 
-`npm install io-event-reactor`
+```
+npm install io-event-reactor
+```
+
+
+### Usage
+
+Usage is pretty straight forward, one of the better starting points to to review the [io-event-reactor-integration-tests](https://github.com/bitsofinfo/io-event-reactor-integration-tests) `sampleIoReactor.js`
+project to see a working example and configuration.
 
 ### Requirements
 
