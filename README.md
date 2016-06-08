@@ -11,8 +11,9 @@ Node.js module for reacting to filesystem events by invoking plugins that match 
 * [Plugins](#plugins)
 * [Monitor Plugins](#monitors)
 * [Reactor Plugins](#reactors)
+* [Unit tests](#tests)
 
-##<a id="works"></a>How it works
+## How it works <a id="works"></a>
 
 The basic concept is this; you have a `monitor` that listens for IO events for particular paths
 on the filesystem. As these IO events occur, they are passed on to one or more `evaluators` to
@@ -31,17 +32,17 @@ which evaluate whether or not an `IoEvent` should be passed on to one or more `r
 
 <img src="docs/diag2.png" width="600"/>
 
-###<a id="requirements"></a>Requirements
+### Requirements <a id="requirements"></a>
 
 * [Node](https://nodejs.org/en/) 4.4.5+
 
-###<a id="install"></a>Install
+### Install <a id="install"></a>
 
 ```
 npm install io-event-reactor
 ```
 
-###<a id="usage"></a>Usage
+### Usage <a id="usage"></a>
 
 Usage is pretty straight forward, one of the better starting points to to review the [io-event-reactor-integration-tests](https://github.com/bitsofinfo/io-event-reactor-integration-tests) `sampleIoReactor.js`
 project to see a working example and configuration.
@@ -117,7 +118,7 @@ var reactor = new IoReactorService(config);
 For more info on configuration options see the JSDoc in [ioReactorService.js](https://github.com/bitsofinfo/io-event-reactor/blob/master/ioReactorService.js)
 and [ioReactor.js](https://github.com/bitsofinfo/io-event-reactor/blob/master/ioReactor.js)
 
-###<a id="plugins"></a>Plugin support
+### Plugin support <a id="plugins"></a>
 
 This module is extensible via plugin contracts for both `monitors` and `reactors`. You can pretty much customize it to
 integrate it with anything you want. See [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support)
@@ -125,10 +126,10 @@ for more details on creating plugins.
 
 * [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support) - Required module for developing any plugin
 
-###<a id="monitors"></a>Monitor plugins
+### Monitor plugins <a id="monitors"></a>
 * [io-event-reactor-plugin-chokidar](https://github.com/bitsofinfo/io-event-reactor-plugin-chokidar) - Monitor the filesystem for changes using [Chokidar](https://github.com/paulmillr/chokidar)
 
-###<a id="reactors"></a>Reactor plugins
+### Reactor plugins <a id="reactors"></a>
 
  **Default Plugins**
 
@@ -142,7 +143,7 @@ The plugins below are simple and just come with this module by default.
 * [io-event-reactor-plugin-mysql](https://github.com/bitsofinfo/io-event-reactor-plugin-mysql) - Exec SQL against data in MySql via [node-mysql](https://github.com/felixge/node-mysql)
 
 
-### Unit tests
+### Unit tests <a id="tests"></a>
 
 To run the unit tests go to the root of the project and run the following.
 
