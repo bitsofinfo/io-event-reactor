@@ -94,7 +94,7 @@ class IoReactor {
     *
     *      evaluators - REQUIRED array[] of one or more config objects, each containing the following properties
     *           - evaluator: function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo), if function returns 'true' all attached reactors will be invoked. If false, nothing will happen. See the 'Evaluators' class for methods that will generate an applicable function for simple use-cases.
-    *           - reactors: array[] of reactor names that should be invoked if the 'evaluator' function returns 'true'
+    *           - reactors: array[] of reactor ids that should be invoked if the 'evaluator' function returns 'true'
     *
     *      reactors - REQUIRED array[] of one of more reactor plugin configurations io-even-reactor "ReactorPlugin"'s' - see available list at: https://github.com/bitsofinfo/io-event-reactor
     *

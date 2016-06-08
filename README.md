@@ -77,6 +77,12 @@ var config = {
                 }
             },
 
+            /**
+            *
+            * evaluators - REQUIRED array[] of one or more config objects, each containing the following properties
+            *   - evaluator: function(ioEventType, fullPath, optionalFsStats, optionalExtraInfo), if function returns 'true' all attached reactors will be invoked. If false, nothing will happen. See the 'Evaluators' class for methods that will generate an applicable function for simple use-cases.
+            *   - reactors: array[] of reactor ids that should be invoked if the 'evaluator' function returns 'true'
+            */
             evaluators: [
                 {
                     evaluator: EvaluatorUtil.regex(['add','change','unlink','unlinkDir','addDir'],'.*bitsofinfo.*','ig'),
@@ -123,8 +129,15 @@ for more details on creating plugins.
 * [io-event-reactor-plugin-chokidar](https://github.com/bitsofinfo/io-event-reactor-plugin-chokidar) - Monitor the filesystem for changes using [Chokidar](https://github.com/paulmillr/chokidar)
 
 ### <a id="reactors"></a> Reactor plugins
-* [code](default_plugins/code) - Permits arbitrary execution of javascript
-* [logger](default_plugins/logger) - Log reactions to monitored events
+
+#### Default Plugins
+
+The plugins below are simple and just come with this module by default.
+
+* [code](default_plugins/code) - Permits arbitrary execution of javascript, to use: `./default_plugins/code/codeReactorPlugin`
+* [logger](default_plugins/logger) - Log reactions to monitored events, to use: `./default_plugins/logger/loggerReactorPlugin`
+
+### External module plugins
 * [io-event-reactor-plugin-shell-exec](https://github.com/bitsofinfo/io-event-reactor-plugin-shell-exec) - Exec shell commands via [stateful-process-command-proxy](https://github.com/bitsofinfo/stateful-process-command-proxy)
 * [io-event-reactor-plugin-mysql](https://github.com/bitsofinfo/io-event-reactor-plugin-mysql) - Exec SQL against data in MySql via [node-mysql](https://github.com/felixge/node-mysql)
 
