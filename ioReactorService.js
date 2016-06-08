@@ -1,7 +1,7 @@
 'use strict'
 
 var IoReactor = require('./ioReactor').IoReactor;
-var IoReactorException = require('./ioReactor').IoReactorException;
+var IoReactorException = require('io-event-reactor-plugin-support').IoReactorException;
 var util = require('util');
 
 
@@ -43,10 +43,10 @@ class IoReactorService {
                 // if no logFunction or errorCallback provided
                 // set it equal to the service's configured functions
                 if (!ioReactorConfig.logFunction) {
-                    ioReactorConfig.logFunction = this._logFunction;
+                    ioReactorConfig.logFunction = this._log.bind(this);
                 }
                 if (!ioReactorConfig.errorCallback) {
-                    ioReactorConfig.errorCallback = this._errorCallback;
+                    ioReactorConfig.errorCallback = this._onError.bind(this);
                 }
 
                 var ioReactor = new IoReactor(ioReactorConfig);
@@ -67,12 +67,12 @@ class IoReactorService {
     *  Helper log function
     *  will set origin = this class' name
     */
-    _log(severity,message) {
+    _log(severity,origin,message) {
         if (this._logFunction) {
             this._logFunction(severity,(this.__proto__.constructor.name),message);
 
         } else {
-            console.log(severity.toUpperCase() + " " + origin + " " + msg);
+            console.log(severity.toUpperCase() + " " + origin + " " + message);
         }
     }
 

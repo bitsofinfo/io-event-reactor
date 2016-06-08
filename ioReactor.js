@@ -169,7 +169,7 @@ class IoReactor {
                 for (let reactorId of evaluator.reactors) {
                     var reactorInstance = this._reactors[reactorId];
                     if (typeof(reactorInstance) == 'undefined') {
-                        throw "No ReactorPlugin registered w/ name: " + reactorName;
+                        throw "No ReactorPlugin registered w/ name: " + reactorId;
                     }
 
                     boundReactors.push(reactorInstance);

@@ -46,6 +46,67 @@ npm install io-event-reactor
 Usage is pretty straight forward, one of the better starting points to to review the [io-event-reactor-integration-tests](https://github.com/bitsofinfo/io-event-reactor-integration-tests) `sampleIoReactor.js`
 project to see a working example and configuration.
 
+Below is an end-to-end simple sample:
+
+1. `mkdir myapp/`
+2. `mkdir -p /tmp/myapp`
+3. `npm install io-event-reactor`
+4. `npm install io-event-reactor-plugin-chokidar`
+5. `vi myapp.js`
+
+```
+var IoReactorService = require("io-event-reactor");
+var EvaluatorUtil = require('io-event-reactor/ioReactor').EvaluatorUtil;
+
+// IoReactorService configuration
+var config = {
+  ioReactors: [
+        {   id: "reactor1",
+            monitor: {
+                plugin: "io-event-reactor-plugin-chokidar",
+                config: {
+                    paths: "/tmp/myapp",
+                    options: {
+                        alwaysStat: false,
+                        awaitWriteFinish: {
+                            stabilityThreshold: 200,
+                            pollInterval: 100
+                        },
+                        ignoreInitial:true
+                    }
+                }
+            },
+
+            evaluators: [
+                {
+                    evaluator: EvaluatorUtil.regex(['add','change','unlink','unlinkDir','addDir'],'.*bitsofinfo.*','ig'),
+                    reactors: ['code1']
+                }
+            ],
+
+            reactors: [
+                { id: "code1",
+                  plugin: "./default_plugins/code/codeReactorPlugin",
+                  config: {
+                      codeFunction: function(ioEvent) {
+                          return new Promise(function(resolve,reject){
+                             console.log("I just reacted to an IoEvent! type: " +ioEvent.eventType + " file: " +ioEvent.fullPath);
+                          });
+                      }
+                  }
+                }
+            ]
+        }
+   ]
+};
+
+// start the reactor
+var reactor = new IoReactorService(config);
+```
+
+6. `node myapp.js`
+7. In another shell: `touch /mtp/myapp/bitsofinfo.txt`
+8. You should see output: `I just reacted to an IoEvent! type: add file: /tmp/myapp/bitsofinfo.txt`
 
 ### <a id="plugins"></a> Plugin support
 * [io-event-reactor-plugin-support](https://github.com/bitsofinfo/io-event-reactor-plugin-support) - Required module for developing any plugin
