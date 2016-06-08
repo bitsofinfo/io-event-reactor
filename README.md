@@ -112,7 +112,7 @@ var reactor = new IoReactorService(config);
 ```
 
 6. `node myapp.js`
-7. In another shell: `touch /mtp/myapp/bitsofinfo.txt`
+7. In another shell: `touch /tmp/myapp/bitsofinfo.txt`
 8. You should see output: `I just reacted to an IoEvent! type: add file: /tmp/myapp/bitsofinfo.txt`
 
 For more info on configuration options see the JSDoc in [ioReactorService.js](https://github.com/bitsofinfo/io-event-reactor/blob/master/ioReactorService.js)
