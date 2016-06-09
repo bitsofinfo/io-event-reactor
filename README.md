@@ -86,6 +86,7 @@ var config = {
             */
             evaluators: [
                 {
+                    // see ioReactor.js (EvaluatorUtil class) for some helper function generators for simple use cases
                     evaluator: EvaluatorUtil.regex(['add','change','unlink','unlinkDir','addDir'],'.*bitsofinfo.*','ig'),
                     reactors: ['code1']
                 }
