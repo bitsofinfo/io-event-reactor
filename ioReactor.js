@@ -212,17 +212,20 @@ class IoReactor {
             // let it evaluate the event
             if (evaluator.evaluate(ioEvent)) {
 
-                this._log('trace', "_monitorEventCallback(evaluator:passed) " + eventType + " " + fullPath);
+                this._log('debug', "_monitorEventCallback(evaluator:passed) " + eventType + " " + fullPath);
 
                 // the evaluator passed, lets now let all configured reactors to react()
                 for (let reactor of evaluator.getReactors()) {
 
-                    this._log('trace', "_monitorEventCallback() calling ReactorPlugin["+reactor.getId()+"].react() for: " + eventType + " " + fullPath);
+                    this._log('debug', "_monitorEventCallback() calling ReactorPlugin["+reactor.getId()+"].react() for: " + eventType + " " + fullPath);
 
                     var self = this;
 
                     // react to it!
                     reactor.react(ioEvent).then(function(result) {
+
+                        self._log('debug','_monitorEventCallback() ReactorResult: success:' + result.isSuccess +
+                            ' type: ' + result.ioEvent.eventType + ' fullPath' + result.ioEvent.fullPath);
 
                         self._log('trace',util.inspect(result));
 
@@ -233,7 +236,7 @@ class IoReactor {
                     });
                 }
             } else {
-                this._log('trace', "_monitorEventCallback(evaluator:did not pass) " + eventType + " " + fullPath);
+                this._log('debug', "_monitorEventCallback(evaluator:did not pass) " + eventType + " " + fullPath);
 
             }
         }
