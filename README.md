@@ -44,8 +44,9 @@ npm install io-event-reactor
 
 ### Usage <a id="usage"></a>
 
-Usage is pretty straight forward, one of the better starting points to to review the [io-event-reactor-integration-tests](https://github.com/bitsofinfo/io-event-reactor-integration-tests) `sampleIoReactor.js`
-project to see a working example and configuration.
+Usage is pretty straight forward, one of the better starting points to to review one of the following apps:
+* [io-event-reactor-integration-tests](https://github.com/bitsofinfo/io-event-reactor-integration-tests) - simple low level app you can run
+* [io-overwatch](https://github.com/bitsofinfo/io-overwatch) - command line directory watching daemon 
 
 Below is an end-to-end simple sample:
 
