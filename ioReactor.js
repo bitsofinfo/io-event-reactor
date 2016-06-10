@@ -225,7 +225,7 @@ class IoReactor {
                     reactor.react(ioEvent).then(function(result) {
 
                         self._log('debug','_monitorEventCallback() ReactorResult['+reactor.getId()+']: success:' + result.isSuccess +
-                            ' type: ' + result.ioEvent.eventType + ' fullPath' + result.ioEvent.fullPath);
+                            ' type: ' + result.ioEvent.eventType + ' fullPath: ' + result.ioEvent.fullPath);
 
                         self._log('trace',util.inspect(result));
 
