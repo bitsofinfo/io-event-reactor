@@ -2,6 +2,8 @@
 
 Node.js module for reacting to filesystem events by invoking plugins that match configurable evaluators.
 
+[![Build Status](https://travis-ci.org/bitsofinfo/io-event-reactor.svg?branch=master)](https://travis-ci.org/bitsofinfo/io-event-reactor)
+
 [![NPM](https://nodei.co/npm/io-event-reactor.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/io-event-reactor/)
 
 * [How it works](#works)
