@@ -1,46 +1,46 @@
 {
-    "name":"io-event-reactor",
-    "version":"1.0.0-beta.5",
-    "description":"Module for conditionally reacting to watches and monitors on filesystem events by executing customizable plugins",
-    "main":"ioReactorService.js",
-    "directories":{
-        "test":"test"
-    },
-    "scripts":{
-        "test":"mocha test/all.js"
-    },
-    "keywords":[
-        "io",
-        "event",
-        "monitor",
-        "changes",
-        "alert",
-        "watch",
-        "file",
-        "directory",
-        "filesystem",
-        "directories"
-    ],
-    "dependencies":{
-        "node-uuid":"latest",
-        "io-event-reactor-plugin-support":"latest"
-    },
-    "devDependencies":{
-        "mocha":"latest"
-    },
-    "contributors":[
-        {
-            "name":"bitsofinfo",
-            "url":"http://bitsofinfo.wordpress.com"
-        }
-    ],
-    "license":"ISC",
-    "repository":{
-        "type":"git",
-        "url":"https://github.com/bitsofinfo/io-event-reactor.git"
-    },
-    "bugs":{
-        "url":"https://github.com/bitsofinfo/io-event-reactor/issues"
-    },
-    "homepage":"https://github.com/bitsofinfo/io-event-reactor"
+  "name": "io-event-reactor",
+  "version": "1.0.0-beta.5",
+  "description": "Module for conditionally reacting to watches and monitors on filesystem events by executing customizable plugins",
+  "main": "ioReactorService.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/all.js"
+  },
+  "keywords": [
+    "io",
+    "event",
+    "monitor",
+    "changes",
+    "alert",
+    "watch",
+    "file",
+    "directory",
+    "filesystem",
+    "directories"
+  ],
+  "dependencies": {
+    "io-event-reactor-plugin-support": "latest",
+    "uuid": "^3.0.0"
+  },
+  "devDependencies": {
+    "mocha": "latest"
+  },
+  "contributors": [
+    {
+      "name": "bitsofinfo",
+      "url": "http://bitsofinfo.wordpress.com"
+    }
+  ],
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bitsofinfo/io-event-reactor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bitsofinfo/io-event-reactor/issues"
+  },
+  "homepage": "https://github.com/bitsofinfo/io-event-reactor"
 }
